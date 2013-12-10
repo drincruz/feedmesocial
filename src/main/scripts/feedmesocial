@@ -1,0 +1,27 @@
+#!/bin/sh
+
+## Sample run script
+
+runpath=/usr/local/feedmesocial
+output=/tmp/
+export JAVA_HOME=/usr
+export CLASSPATH=.:${runpath}/feedmesocial-2.4.1.jar
+
+if [ -d /usr/local/tmp/ ]; then
+    logdir=/usr/local/tmp/;
+else
+    logdir=/tmp/;
+fi
+today=`date +%Y%m%d_%H%M`;
+stdout=${logdir}feedmesocial.${today}.log
+stderr=${logdir}feedmesocial.${today}.err
+
+case $1 in
+"start")
+    cd ${runpath};
+    printf "Starting feedmesocial...\n" 1>>${stdout} 2>>${stderr};
+    printf "$JAVA_HOME/bin/java -Dfeedmesocial=1 -classpath $CLASSPATH com.drincruz.service.feedmesocial.FeedMeSocialService ${output}\n" 1>>${stdout} 2>>${stderr};
+    $JAVA_HOME/bin/java -Xms512M -Xmx1024M -Dfeedmesocial=1 -classpath $CLASSPATH com.drincruz.service.feedmesocial.FeedMeSocialService ${output} 1>>${stdout} 2>>${stderr};
+    printf "feedmesocial done\n" 1>>${stdout} 2>>${stderr};
+esac
+exit;
